@@ -9,9 +9,9 @@ import kotlinx.coroutines.flow.flow
 
 
 
-class TaskRepositoryImpl constructor(val taskDao: TaskDao, val taskMapper: TaskMapper){
+class TaskRepositoryImpl constructor(val taskDao: TaskDao, val taskMapper: TaskMapper):TaskRepository{
 
-    suspend fun getTaskList(): Flow<DataState<List<Task>>> = flow {
+    override fun getTaskList(): Flow<DataState<List<Task>>> = flow {
         emit(DataState.Loading)
 
         try {
@@ -23,7 +23,7 @@ class TaskRepositoryImpl constructor(val taskDao: TaskDao, val taskMapper: TaskM
 
     }
 
-    suspend fun getTask(id:Int): Flow<DataState<Task>> = flow {
+    override fun getTask(id:Int): Flow<DataState<Task>> = flow {
         emit(DataState.Loading)
         try {
             val task = taskDao.getTask(id)
@@ -33,7 +33,7 @@ class TaskRepositoryImpl constructor(val taskDao: TaskDao, val taskMapper: TaskM
         }
     }
 
-    suspend fun update(task: Task): Flow<DataState<Int>> = flow {
+    override fun update(task: Task): Flow<DataState<Int>> = flow {
         emit(DataState.Loading)
         try {
             val count = taskDao.updateTask(taskMapper.mapToEntity(task))
@@ -43,7 +43,7 @@ class TaskRepositoryImpl constructor(val taskDao: TaskDao, val taskMapper: TaskM
         }
     }
 
-    suspend fun insert(task: Task): Flow<DataState<Long>> = flow {
+    override fun insert(task: Task): Flow<DataState<Long>> = flow {
         emit(DataState.Loading)
         try {
             val task = taskDao.insert(taskMapper.mapToEntity(task))

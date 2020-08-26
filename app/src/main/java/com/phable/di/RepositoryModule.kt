@@ -3,6 +3,7 @@ package com.phable.di
 import com.phable.data.roompers.TaskDao
 import com.phable.data.roompers.TaskEntity
 import com.phable.models.Task
+import com.phable.repository.TaskRepository
 import com.phable.repository.TaskRepositoryImpl
 import com.phable.repository.mappers.TaskMapper
 import com.phable.util.EntityMapping
@@ -25,7 +26,7 @@ object RepositoryModule {
 
     @Singleton
     @Provides
-    fun provideTaskRepository(taskDao: TaskDao,taskMapper: TaskMapper):TaskRepositoryImpl{
+    fun provideTaskRepository(taskDao: TaskDao,taskMapper: TaskMapper): TaskRepository {
         return TaskRepositoryImpl(taskDao,taskMapper)
     }
 }
