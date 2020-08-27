@@ -28,7 +28,7 @@ class TaskFragment : Fragment(R.layout.fragment_item_list),TaskRecyclerViewAdapt
     private val viewModel:MainVewModel by viewModels()
     private lateinit var taskRecyclerViewAdapter: TaskRecyclerViewAdapter
     private lateinit var mView: View
-    private lateinit var task: Task
+    private var task: Task? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -136,9 +136,10 @@ class TaskFragment : Fragment(R.layout.fragment_item_list),TaskRecyclerViewAdapt
         viewModel.taskStateEvent(MainStateEvent.GetTaskListEvents())
     }
 
-    fun showNoticeDialog(task: Task) {
+    fun showNoticeDialog(t: Task?) {
         // Create an instance of the dialog fragment and show it
-        val dialog = NoticeDialogFragment(this,mView,task)
+        val dialog = NoticeDialogFragment(this,mView,t!!)
         activity?.supportFragmentManager?.let { dialog.show(it, "NoticeDialogFragment") }
+        task = null
     }
 }
