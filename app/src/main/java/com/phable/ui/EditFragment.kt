@@ -80,7 +80,7 @@ class EditFragment : Fragment(R.layout.fragment_edit) {
         })
         viewModel.dataUpdateTaskState.observe(viewLifecycleOwner, Observer { dataState ->
             when (dataState) {
-                is DataState.Sucess<String> -> {
+                is DataState.Sucess<Int> -> {
                     displayProgressBar(false)
                     Log.e(TAG, "" + dataState.data)
                     if (dataState.data != null) {
@@ -123,11 +123,11 @@ class EditFragment : Fragment(R.layout.fragment_edit) {
 
     private fun checkData() {
         val tsLong:Int  = Math.random().roundToInt()
-        if (task==null){
+        if (null==arguments?.getInt("id")){
             task = Task(tsLong ,et_name.text.toString(),et_email.text.toString())
             viewModel.taskStateEvent(MainStateEvent.CreateTaskEvent(task!!))
         }else{
-            task = Task(tsLong ,et_name.text.toString(),et_email.text.toString())
+            task = task?.id?.let { Task(it,et_name.text.toString(),et_email.text.toString()) }
             viewModel.taskStateEvent(MainStateEvent.UpdateTaskEvent(task!!))
         }
         task = null

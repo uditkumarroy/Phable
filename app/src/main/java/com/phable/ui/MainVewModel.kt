@@ -32,8 +32,8 @@ class MainVewModel @ViewModelInject constructor(val taskRepository: TaskReposito
     val dataDeleteTaskState: LiveData<DataState<String>>
         get() = _dataDeleteTaskState
 
-    private val _dataUpdateTaskState: MutableLiveData<DataState<String>> = MutableLiveData()
-    val dataUpdateTaskState: LiveData<DataState<String>>
+    private val _dataUpdateTaskState: MutableLiveData<DataState<Int>> = MutableLiveData()
+    val dataUpdateTaskState: LiveData<DataState<Int>>
         get() = _dataUpdateTaskState
 
     fun taskStateEvent(mainStateEvent: MainStateEvent) {
@@ -68,7 +68,7 @@ class MainVewModel @ViewModelInject constructor(val taskRepository: TaskReposito
                 }
 
                 is UpdateTaskEvent ->{
-                    taskRepository.delete(mainStateEvent.task)
+                    taskRepository.update(mainStateEvent.task)
                         .onEach {task->
                             _dataUpdateTaskState.value = task
                         }.launchIn(viewModelScope)
