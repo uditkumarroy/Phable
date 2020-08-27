@@ -25,7 +25,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 class TaskFragment : Fragment(R.layout.fragment_item_list),TaskRecyclerViewAdapter.Interaction,NoticeDialogFragment.NoticeDialogListener{
 
     private val TAG = "Task_Fragment"
-    private val viewModel:MainVewModel by activityViewModels()
+    private val viewModel:MainVewModel by viewModels()
     private lateinit var taskRecyclerViewAdapter: TaskRecyclerViewAdapter
     private lateinit var mView: View
     private lateinit var task: Task

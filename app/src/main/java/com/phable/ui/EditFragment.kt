@@ -24,7 +24,8 @@ import kotlin.math.roundToInt
 class EditFragment : Fragment(R.layout.fragment_edit) {
 
     private val TAG = "Task_Fragment"
-    private val viewModel:MainVewModel by activityViewModels()
+    private val viewModelOb:MainVewModel by activityViewModels()
+    private val viewModel:MainVewModel by viewModels()
     private lateinit var binding:FragmentEditBinding
     private var task:Task? = null
     private lateinit var mView:View
@@ -56,7 +57,7 @@ class EditFragment : Fragment(R.layout.fragment_edit) {
             }
         })
 
-        viewModel.dataGetTaskState.observe(viewLifecycleOwner, Observer { dataState ->
+        viewModelOb.dataGetTaskState.observe(viewLifecycleOwner, Observer { dataState ->
             when (dataState) {
                 is DataState.Sucess<Task> -> {
                     displayProgressBar(false)
