@@ -53,5 +53,15 @@ class TaskRepositoryImpl constructor(val taskDao: TaskDao, val taskMapper: TaskM
         }
     }
 
+    override fun delete(task: Task): Flow<DataState<String>> = flow {
+        emit(DataState.Loading)
+        try {
+            taskDao.deleteTask(taskMapper.mapToEntity(task))
+            emit(DataState.Sucess("Done"))
+        }catch (e:Exception){
+            emit(DataState.Error(e))
+        }
+    }
+
 
 }

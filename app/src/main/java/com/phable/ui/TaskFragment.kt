@@ -3,7 +3,9 @@ package com.phable.ui
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.findNavController
@@ -20,14 +22,17 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 @ExperimentalCoroutinesApi
 @AndroidEntryPoint
-class TaskFragment : Fragment(R.layout.fragment_item_list),TaskRecyclerViewAdapter.Interaction{
+class TaskFragment : Fragment(R.layout.fragment_item_list),TaskRecyclerViewAdapter.Interaction,NoticeDialogFragment.NoticeDialogListener{
 
     private val TAG = "Task_Fragment"
-    private val viewModel:MainVewModel by viewModels()
+    private val viewModel:MainVewModel by activityViewModels()
     private lateinit var taskRecyclerViewAdapter: TaskRecyclerViewAdapter
+    private lateinit var mView: View
+    private lateinit var task: Task
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        mView = view
         floatingActionButton.setOnClickListener {
             view.findNavController().navigate(R.id.action_taskFragment_to_editFragment)
         }
@@ -47,6 +52,25 @@ class TaskFragment : Fragment(R.layout.fragment_item_list),TaskRecyclerViewAdapt
                             taskList = dataState.data,
                             isQueryExhausted = true
                         )
+                    }
+                }
+                is DataState.Error -> {
+                    displayError(dataState.exception.message.toString())
+                    displayProgressBar(false)
+                }
+                is DataState.Loading -> {
+                    displayProgressBar(true)
+                }
+            }
+        })
+
+        viewModel.dataDeleteTaskState.observe(viewLifecycleOwner, Observer { dataState ->
+            when (dataState) {
+                is DataState.Sucess<String> -> {
+                    displayProgressBar(false)
+                    Log.e(TAG, "" + dataState.data)
+                    if (dataState.data != null) {
+                        viewModel.taskStateEvent(MainStateEvent.GetTaskListEvents())
                     }
                 }
                 is DataState.Error -> {
@@ -100,7 +124,21 @@ class TaskFragment : Fragment(R.layout.fragment_item_list),TaskRecyclerViewAdapt
     }
 
     override fun onItemSelected(position: Int, item: Task) {
-        TODO("Not yet implemented")
+        task = item
+        showNoticeDialog(task)
     }
 
+    override fun onDialogUpdateClick(view: View) {
+
+    }
+
+    override fun onDialogDeleteClick() {
+        viewModel.taskStateEvent(MainStateEvent.GetTaskListEvents())
+    }
+
+    fun showNoticeDialog(task: Task) {
+        // Create an instance of the dialog fragment and show it
+        val dialog = NoticeDialogFragment(this,mView,task)
+        activity?.supportFragmentManager?.let { dialog.show(it, "NoticeDialogFragment") }
+    }
 }

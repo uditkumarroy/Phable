@@ -24,6 +24,18 @@ class MainVewModel @ViewModelInject constructor(val taskRepository: TaskReposito
     val dataTaskState: LiveData<DataState<Long>>
         get() = _dataTaskState
 
+    private val _dataGetTaskState: MutableLiveData<DataState<Task>> = MutableLiveData()
+    val dataGetTaskState: LiveData<DataState<Task>>
+        get() = _dataGetTaskState
+
+    private val _dataDeleteTaskState: MutableLiveData<DataState<String>> = MutableLiveData()
+    val dataDeleteTaskState: LiveData<DataState<String>>
+        get() = _dataDeleteTaskState
+
+    private val _dataUpdateTaskState: MutableLiveData<DataState<String>> = MutableLiveData()
+    val dataUpdateTaskState: LiveData<DataState<String>>
+        get() = _dataUpdateTaskState
+
     fun taskStateEvent(mainStateEvent: MainStateEvent) {
         viewModelScope.launch {
             when (mainStateEvent) {
@@ -36,13 +48,30 @@ class MainVewModel @ViewModelInject constructor(val taskRepository: TaskReposito
 
                 is CreateTaskEvent ->{
                     taskRepository.insert(mainStateEvent.task)
-                        .onEach { task->
-                            _dataTaskState.value = task
+                        .onEach { taskId->
+                            _dataTaskState.value = taskId
                         }.launchIn(viewModelScope)
                 }
 
                 is GetTaskEvent -> {
                     taskRepository.getTask(mainStateEvent.id)
+                        .onEach {task->
+                            _dataGetTaskState.value = task
+                        }.launchIn(viewModelScope)
+                }
+
+                is DeleteTaskEvent ->{
+                    taskRepository.delete(mainStateEvent.task)
+                        .onEach {task->
+                            _dataDeleteTaskState.value = task
+                        }.launchIn(viewModelScope)
+                }
+
+                is UpdateTaskEvent ->{
+                    taskRepository.delete(mainStateEvent.task)
+                        .onEach {task->
+                            _dataUpdateTaskState.value = task
+                        }.launchIn(viewModelScope)
                 }
 
                 is None -> {

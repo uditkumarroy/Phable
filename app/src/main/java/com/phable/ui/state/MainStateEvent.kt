@@ -6,5 +6,7 @@ sealed class MainStateEvent {
     class GetTaskListEvents: MainStateEvent()
     class GetTaskEvent(val id:Int): MainStateEvent()
     class CreateTaskEvent(val task: Task): MainStateEvent()
+    class DeleteTaskEvent(val task: Task): MainStateEvent()
+    class UpdateTaskEvent(val task: Task): MainStateEvent()
     class None: MainStateEvent()
 }

@@ -13,4 +13,6 @@ interface TaskRepository {
     fun update(task: Task): Flow<DataState<Int>>
 
     fun insert(task: Task): Flow<DataState<Long>>
+
+    fun delete(task: Task): Flow<DataState<String>>
 }

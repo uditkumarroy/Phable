@@ -17,4 +17,6 @@ interface TaskDao {
     @Update
     suspend fun updateTask(task: TaskEntity):Int
 
+    @Delete
+    suspend fun deleteTask(task: TaskEntity)
 }
